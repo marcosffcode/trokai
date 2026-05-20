@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Trokaí – Meu Perfil</title>
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    .profile-hero {
+      background: linear-gradient(135deg, var(--blue) 0%, #4a2fff 100%);
+      border-radius: var(--radius);
+      padding: 32px;
+      color: white;
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      margin-bottom: 24px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .profile-hero::before {
+      content: '';
+      position: absolute;
+      top: -50px; right: -50px;
+      width: 200px; height: 200px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.08);
+    }
+
+    .profile-hero::after {
+      content: '';
+      position: absolute;
+      bottom: -30px; right: 80px;
+      width: 120px; height: 120px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.05);
+    }
+
+    .profile-avatar-wrap {
+      position: relative;
+    }
+
+    .profile-avatar-edit {
+      position: absolute;
+      bottom: 0; right: 0;
+      width: 28px; height: 28px;
+      background: var(--green);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer;
+      border: 2px solid white;
+    }
+
+    .profile-info h1 {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.6rem;
+      font-weight: 800;
+      margin-bottom: 6px;
+    }
+
+    .profile-info p {
+      opacity: 0.8;
+      font-size: 0.875rem;
+      margin-bottom: 8px;
+    }
+
+    .profile-stats-row {
+      display: flex;
+      gap: 24px;
+    }
+
+    .profile-stat {
+      text-align: center;
+    }
+
+    .profile-stat-val {
+      font-size: 1.5rem;
+      font-weight: 800;
+    }
+
+    .profile-stat-label {
+      font-size: 0.75rem;
+      opacity: 0.7;
+    }
+
+    .profile-layout {
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      gap: 24px;
+    }
+
+    @media (max-width: 768px) {
+      .profile-layout { grid-template-columns: 1fr; }
+      .profile-hero { flex-direction: column; text-align: center; }
+      .profile-stats-row { justify-content: center; }
+    }
+
+    .side-card {
+      background: white;
+      border-radius: var(--radius);
+      padding: 20px;
+      box-shadow: var(--shadow-card);
+      margin-bottom: 16px;
+    }
+
+    .side-card-title {
+      font-family: 'Outfit', sans-serif;
+      font-size: 0.9rem;
+      font-weight: 700;
+      margin-bottom: 16px;
+      color: var(--dark);
+    }
+
+    .menu-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 8px;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      transition: background 0.15s;
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--gray-600);
+    }
+
+    .menu-item:hover { background: var(--gray-100); color: var(--blue); }
+    .menu-item.active { background: #EEF0FF; color: var(--blue); }
+
+    .menu-item .menu-icon {
+      width: 34px; height: 34px;
+      border-radius: 8px;
+      background: var(--gray-100);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1rem;
+    }
+
+    .menu-item.active .menu-icon { background: var(--blue); color: white; }
+
+    .review-item {
+      display: flex;
+      gap: 12px;
+      padding: 14px 0;
+      border-bottom: 1px solid var(--gray-100);
+    }
+
+    .review-item:last-child { border-bottom: none; }
+
+    .review-content { flex: 1; }
+
+    .review-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 4px;
+    }
+
+    .review-name { font-weight: 700; font-size: 0.875rem; }
+
+    .review-text { font-size: 0.85rem; color: var(--gray-600); line-height: 1.5; }
+
+    .edit-form { display: none; }
+    .edit-form.visible { display: block; }
+  </style>
+</head>
+<body>
+  <nav class="navbar" id="navbar"></nav>
+
+  <main class="main-content" style="max-width:1100px;margin:0 auto">
+   
+    <div class="profile-hero" id="profileHero">
+      <div class="profile-avatar-wrap">
+        <div class="avatar avatar-xl" id="heroAvatar">?</div>
+        <div class="profile-avatar-edit" title="Alterar foto">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+        </div>
+      </div>
+      <div class="profile-info">
+        <h1 id="heroNome">Carregando...</h1>
+        <p id="heroEmail">email@exemplo.com</p>
+        <div class="stars" style="margin-bottom:12px">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="#FFC107"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="#FFC107"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="#FFC107"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="#FFC107"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="#FFC107"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          <span style="margin-left:6px;font-size:0.9rem">5.0 · Membro desde 2024</span>
+        </div>
+        <div class="profile-stats-row">
+          <div class="profile-stat"><div class="profile-stat-val">3</div><div class="profile-stat-label">Itens publicados</div></div>
+          <div class="profile-stat"><div class="profile-stat-val">12</div><div class="profile-stat-label">Trocas feitas</div></div>
+          <div class="profile-stat"><div class="profile-stat-val">5</div><div class="profile-stat-label">Doações</div></div>
+        </div>
+      </div>
+      <button class="btn btn-outline" style="border-color:rgba(255,255,255,0.5);color:white;margin-left:auto;align-self:flex-start" onclick="toggleEditForm()">
+        <span style="display:inline-flex;align-items:center;gap:6px"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg> Editar perfil</span>
+      </button>
+    </div>
+
+    
+    <div class="card edit-form" id="editForm" style="margin-bottom:24px">
+      <h3 style="font-family:'Outfit',sans-serif;font-weight:700;margin-bottom:16px">Editar Perfil</h3>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Nome</label>
+          <input type="text" id="editNome" class="form-control">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Email</label>
+          <input type="email" id="editEmail" class="form-control" disabled>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Telefone</label>
+          <input type="tel" id="editTel" class="form-control" placeholder="(63) 9 9999-9999">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Bairro</label>
+          <input type="text" id="editBairro" class="form-control" placeholder="Seu bairro">
+        </div>
+      </div>
+      <div style="display:flex;gap:10px;justify-content:flex-end">
+        <button class="btn btn-ghost" onclick="toggleEditForm()">Cancelar</button>
+        <button class="btn btn-primary" onclick="salvarPerfil()">Salvar alterações</button>
+      </div>
+    </div>
+
+    <div class="profile-layout">
+      
+      <div>
+        <div class="side-card">
+          <div class="side-card-title">Menu</div>
+          <div class="menu-item active" onclick="showTab('meus-itens')">
+            <span class="menu-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg></span> Meus itens
+          </div>
+          <div class="menu-item" onclick="showTab('trocas')">
+            <span class="menu-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg></span> Minhas trocas
+          </div>
+          <div class="menu-item" onclick="showTab('avaliacoes')">
+            <span class="menu-icon">⭐</span> Avaliações
+          </div>
+          <div class="menu-item" onclick="showTab('favoritos')">
+            <span class="menu-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></span> Favoritos
+          </div>
+          <hr style="border:none;border-top:1px solid var(--gray-200);margin:10px 0">
+          <div class="menu-item" onclick="Auth.logout()">
+            <span class="menu-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg></span> Sair
+          </div>
+        </div>
+      </div>
+
+      
+      <div id="tabContent">
+        <!-- Filled by JS -->
+      </div>
+    </div>
+  </main>
+
+  <script src="js/app.js"></script>
+  <script>
+    renderNavbar();
+    if (!Auth.requerAuth()) {}
+
+    const user = Auth.user;
+    if (user) {
+      document.getElementById('heroAvatar').textContent = user.avatar;
+      document.getElementById('heroNome').textContent = user.nome;
+      document.getElementById('heroEmail').textContent = user.email;
+      document.getElementById('editNome').value = user.nome;
+      document.getElementById('editEmail').value = user.email;
+    }
+
+    function toggleEditForm() {
+      document.getElementById('editForm').classList.toggle('visible');
+    }
+
+    function salvarPerfil() {
+      const nome = document.getElementById('editNome').value.trim();
+      if (!nome) { showToast('Nome não pode estar vazio', 'error'); return; }
+      Auth.user.nome = nome;
+      Auth.user.avatar = nome[0].toUpperCase();
+      sessionStorage.setItem('trokai_user', JSON.stringify(Auth.user));
+      document.getElementById('heroNome').textContent = nome;
+      document.getElementById('heroAvatar').textContent = Auth.user.avatar;
+      toggleEditForm();
+      showToast('Perfil atualizado!', 'success');
+    }
+
+    let tabAtual = 'meus-itens';
+
+    function showTab(tab) {
+      tabAtual = tab;
+      document.querySelectorAll('.menu-item').forEach(el => el.classList.remove('active'));
+      event.currentTarget.classList.add('active');
+      renderTab();
+    }
+
+    function renderTab() {
+      const container = document.getElementById('tabContent');
+
+      if (tabAtual === 'meus-itens') {
+        const meusItens = ProdutosDB.listar().slice(0, 3); 
+        container.innerHTML = `
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+            <span style="font-family:'Outfit',sans-serif;font-weight:700;font-size:1.1rem">Meus itens</span>
+            <a href="novo-produto.html" class="btn btn-green btn-sm">+ Publicar novo</a>
+          </div>
+          <div class="product-grid">
+            ${meusItens.map(p => {
+              const catObj = CATEGORIAS.find(c => c.id === p.categoria);
+              return `
+                <div class="product-card">
+                  <div class="product-img" style="cursor:default">
+                    <div class="product-img-placeholder"><span class="cat-svg-icon">${catObj?.icon || `<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>`}</span></div>
+                    <span class="product-badge ${p.intencao === 'Doar' ? 'badge-doacao' : 'badge-troca'}">${p.intencao}</span>
+                  </div>
+                  <div class="product-info">
+                    <div class="product-title">${p.titulo}</div>
+                    <div style="display:flex;gap:6px;margin-top:8px">
+                      <button class="btn btn-ghost btn-sm" style="flex:1;font-size:0.75rem" onclick="window.location.href='novo-produto.html?edit=${p.id}'"><span style='display:inline-flex;align-items:center;gap:4px'><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg> Editar</span></button>
+                      <button class="btn btn-sm" style="flex:1;font-size:0.75rem;background:#FFEBEE;color:#c62828" onclick="removerItem(${p.id}, this)"><span style='display:inline-flex;align-items:center;gap:4px'><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg> Remover</span></button>
+                    </div>
+                  </div>
+                </div>
+              `;
+            }).join('')}
+          </div>
+        `;
+      } else if (tabAtual === 'trocas') {
+        container.innerHTML = `
+          <div style="font-family:'Outfit',sans-serif;font-weight:700;font-size:1.1rem;margin-bottom:16px">Minhas trocas</div>
+          <div class="card" style="margin-bottom:12px">
+            <div style="display:flex;align-items:center;gap:12px">
+              <div class="avatar avatar-md">P</div>
+              <div style="flex:1">
+                <div style="font-weight:700;font-size:0.9rem">Troca com Pedro M.</div>
+                <div style="font-size:0.8rem;color:var(--gray-400)">Livro: O Alquimista <span style="display:inline-flex;align-items:center;vertical-align:middle"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg></span> Camiseta Nike</div>
+              </div>
+              <span class="chip chip-green">Concluída</span>
+            </div>
+          </div>
+          <div class="card">
+            <div style="display:flex;align-items:center;gap:12px">
+              <div class="avatar avatar-md">L</div>
+              <div style="flex:1">
+                <div style="font-weight:700;font-size:0.9rem">Troca com Lucas R.</div>
+                <div style="font-size:0.8rem;color:var(--gray-400)">Fone JBL <span style="display:inline-flex;align-items:center;vertical-align:middle"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg></span> Jogos de Tabuleiro</div>
+              </div>
+              <span class="chip chip-blue">Aguardando</span>
+            </div>
+          </div>
+        `;
+      } else if (tabAtual === 'avaliacoes') {
+        const reviews = [
+          { nome: 'Pedro M.', nota: 5, texto: 'Ótima pessoa! Item exatamente como descrito. Troca tranquila.', avatar: 'P' },
+          { nome: 'Lucas R.', nota: 5, texto: 'Muito pontual e honesto. Recomendo!', avatar: 'L' },
+          { nome: 'Marina L.', nota: 4, texto: 'Boa experiência de troca, combinamos rápido.', avatar: 'M' },
+        ];
+        container.innerHTML = `
+          <div style="font-family:'Outfit',sans-serif;font-weight:700;font-size:1.1rem;margin-bottom:16px">Avaliações recebidas</div>
+          <div class="card">
+            ${reviews.map(r => `
+              <div class="review-item">
+                <div class="avatar avatar-sm">${r.avatar}</div>
+                <div class="review-content">
+                  <div class="review-header">
+                    <span class="review-name">${r.nome}</span>
+                    <div class="stars">
+                      ${[1,2,3,4,5].map(n => `<svg width="12" height="12" viewBox="0 0 24 24" fill="${n <= r.nota ? '#FFC107' : '#e0e0e0'}"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>`).join('')}
+                    </div>
+                  </div>
+                  <p class="review-text">${r.texto}</p>
+                </div>
+              </div>
+            `).join('')}
+          </div>
+        `;
+      } else if (tabAtual === 'favoritos') {
+        container.innerHTML = `
+          <div style="font-family:'Outfit',sans-serif;font-weight:700;font-size:1.1rem;margin-bottom:16px">Favoritos</div>
+          <div class="empty-state">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+            <h3>Nenhum favorito ainda</h3>
+            <p>Salve itens que você curtiu para ver aqui</p>
+            <a href="home.html" class="btn btn-outline btn-sm" style="margin-top:8px">Explorar itens</a>
+          </div>
+        `;
+      }
+    }
+
+    function removerItem(id, btn) {
+      if (!confirm('Remover este item?')) return;
+      ProdutosDB.remover(id);
+      showToast('Item removido.', 'success');
+      renderTab();
+    }
+
+    renderTab();
+  </script>
+</body>
+</html>

@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Trokaí – Publicar item</title>
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    .publish-layout {
+      display: grid;
+      grid-template-columns: 1fr 320px;
+      gap: 24px;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    @media (max-width: 768px) {
+      .publish-layout { grid-template-columns: 1fr; }
+    }
+
+    .step-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 24px;
+    }
+
+    .step-num {
+      width: 32px; height: 32px;
+      border-radius: 50%;
+      background: var(--blue);
+      color: white;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 800;
+      font-size: 0.875rem;
+      flex-shrink: 0;
+    }
+
+    .step-label {
+      font-family: 'Outfit', sans-serif;
+      font-weight: 700;
+      font-size: 1rem;
+    }
+
+    .img-upload-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+    }
+
+    .img-slot {
+      aspect-ratio: 1;
+      border-radius: var(--radius-sm);
+      border: 2px dashed var(--gray-200);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      background: var(--gray-50);
+      transition: border-color 0.2s, background 0.2s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .img-slot:hover { border-color: var(--blue); background: #f0f0ff; }
+
+    .img-slot.filled {
+      border-color: var(--green);
+      background: var(--gray-50);
+    }
+
+    .img-slot .plus {
+      color: var(--gray-400);
+      font-size: 1.5rem;
+      font-weight: 300;
+    }
+
+    .img-slot .preview-icon {
+      font-size: 2.5rem;
+    }
+
+    .img-slot-label {
+      position: absolute;
+      bottom: 4px;
+      font-size: 0.65rem;
+      color: var(--gray-400);
+      font-weight: 600;
+    }
+
+    .preview-card {
+      background: white;
+      border-radius: var(--radius);
+      padding: 20px;
+      box-shadow: var(--shadow-card);
+      position: sticky;
+      top: 90px;
+    }
+
+    .preview-title {
+      font-size: 0.8rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--gray-400);
+      margin-bottom: 14px;
+    }
+
+    .preview-img-box {
+      width: 100%;
+      aspect-ratio: 1;
+      border-radius: var(--radius-sm);
+      background: var(--gray-100);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 4rem;
+      margin-bottom: 12px;
+    }
+
+    .preview-item-title {
+      font-weight: 800;
+      font-size: 1rem;
+      color: var(--dark);
+      margin-bottom: 6px;
+      min-height: 1.5em;
+    }
+
+    .form-card {
+      background: white;
+      border-radius: var(--radius);
+      padding: 24px;
+      box-shadow: var(--shadow-card);
+      margin-bottom: 20px;
+    }
+
+    .char-count {
+      text-align: right;
+      font-size: 0.75rem;
+      color: var(--gray-400);
+      margin-top: 4px;
+    }
+
+    .radio-group {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .radio-option {
+      flex: 1;
+      min-width: 100px;
+    }
+
+    .radio-option input[type=radio] { display: none; }
+
+    .radio-option label {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      padding: 12px;
+      border-radius: var(--radius-sm);
+      border: 2px solid var(--gray-200);
+      cursor: pointer;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--gray-600);
+      text-align: center;
+      transition: all 0.15s;
+    }
+
+    .radio-option input:checked + label {
+      border-color: var(--blue);
+      background: #f0f0ff;
+      color: var(--blue);
+    }
+
+    .radio-option label span { font-size: 1.5rem; }
+  </style>
+</head>
+<body>
+  <nav class="navbar" id="navbar"></nav>
+
+  <main class="main-content" style="max-width:940px;margin:0 auto">
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:24px">
+      <div class="voltar-btn" onclick="history.back()" style="margin:0">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5"/><path d="M12 5l-7 7 7 7"/></svg>
+      </div>
+      <h1 style="font-family:'Outfit',sans-serif;font-size:1.4rem;font-weight:800">
+        <span id="pageTitle">Publicar novo item</span>
+      </h1>
+    </div>
+
+    <div class="publish-layout">
+      
+      <div>
+        <!-- Fotos -->
+        <div class="form-card">
+          <div class="step-header">
+            <span class="step-num">1</span>
+            <span class="step-label">Fotos do item</span>
+          </div>
+          <p style="font-size:0.85rem;color:var(--gray-400);margin-bottom:14px">Adicione até 6 fotos. A primeira será a capa.</p>
+          <div class="img-upload-grid" id="imgGrid">
+            ${[1,2,3,4,5,6].map((n, i) => `
+              <div class="img-slot ${i === 0 ? '' : ''}" onclick="simularUpload(${i})" id="slot${i}">
+                <span class="plus">+</span>
+                ${i === 0 ? '<span class="img-slot-label">Capa</span>' : ''}
+              </div>
+            `).join('')}
+          </div>
+        </div>
+
+        
+        <div class="form-card">
+          <div class="step-header">
+            <span class="step-num">2</span>
+            <span class="step-label">Informações básicas</span>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Título do item <span style="color:#e53935">*</span></label>
+            <input type="text" id="titulo" class="form-control" placeholder="Ex: Livro Clean Code – Robert Martin" maxlength="80"
+              oninput="atualizarPreview()">
+            <div class="char-count"><span id="tituloCount">0</span>/80</div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Categoria <span style="color:#e53935">*</span></label>
+            <select class="form-control" id="categoria" onchange="atualizarPreview()">
+              <option value="">Selecione uma categoria...</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Descrição</label>
+            <textarea class="form-control" id="descricao" rows="4" maxlength="500"
+              placeholder="Descreva o item: tamanho, cor, motivo da troca, o que você quer em troca..."
+              oninput="contarDescricao()"></textarea>
+            <div class="char-count"><span id="descCount">0</span>/500</div>
+          </div>
+        </div>
+
+        
+        <div class="form-card">
+          <div class="step-header">
+            <span class="step-num">3</span>
+            <span class="step-label">Estado e intenção</span>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Condição do item <span style="color:#e53935">*</span></label>
+            <div class="radio-group">
+              ${CONDICOES.map(c => `
+                <div class="radio-option">
+                  <input type="radio" name="condicao" id="cond_${c}" value="${c}">
+                  <label for="cond_${c}">
+                    <span class='condition-icon'>${c === 'Novo' ? `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>` : c === 'Seminovo' ? `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>` : c === 'Bom estado' ? `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>` : `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>`}</span>
+                    ${c}
+                  </label>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+
+          <div class="form-group" style="margin-top:20px">
+            <label class="form-label">Intenção <span style="color:#e53935">*</span></label>
+            <div class="radio-group">
+              ${INTENCOES.map(i => `
+                <div class="radio-option">
+                  <input type="radio" name="intencao" id="int_${i.replace(' ','_')}" value="${i}">
+                  <label for="int_${i.replace(' ','_')}">
+                    <span class='condition-icon'>${i === 'Trocar' ? `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>` : i === 'Doar' ? `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>` : `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.42 4.58a5.4 5.4 0 0 0-7.65 0l-.77.78-.77-.78a5.4 5.4 0 0 0-7.65 7.65l1.06 1.06L12 21.23l7.77-7.94 1.06-1.06a5.4 5.4 0 0 0-.41-7.65z"/></svg>`}</span>
+                    ${i}
+                  </label>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+        </div>
+
+        
+        <div class="form-card">
+          <div class="step-header">
+            <span class="step-num">4</span>
+            <span class="step-label">Localização</span>
+          </div>
+          <p style="font-size:0.85rem;color:var(--gray-400);margin-bottom:14px">
+            Apenas o bairro será exibido para proteger sua privacidade (LGPD).
+          </p>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Bairro <span style="color:#e53935">*</span></label>
+              <input type="text" id="bairro" class="form-control" placeholder="Ex: Plano Diretor Sul">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Cidade <span style="color:#e53935">*</span></label>
+              <input type="text" id="cidade" class="form-control" placeholder="Ex: Palmas" value="Palmas">
+            </div>
+          </div>
+        </div>
+
+        <div id="msgErro" style="background:#FFEBEE;border:1px solid #FFCDD2;color:#c62828;border-radius:var(--radius-sm);padding:12px 16px;font-size:0.875rem;font-weight:600;display:none;margin-bottom:16px"></div>
+
+        <button class="btn btn-primary btn-full btn-lg" onclick="publicar()">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 2L11 13"/><path d="M22 2L15 22 11 13 2 9l20-7z"/></svg>
+          Publicar item
+        </button>
+      </div>
+
+      
+      <div>
+        <div class="preview-card">
+          <div class="preview-title"><span style="display:inline-flex;align-items:center;gap:6px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg> Pré-visualização</span></div>
+          <div class="preview-img-box" id="previewImg"><span class="cat-svg-icon"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg></span></div>
+          <div class="preview-item-title" id="previewTitle">Título do item</div>
+          <div id="previewChips" style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px"></div>
+          <p style="font-size:0.8rem;color:var(--gray-400)" id="previewBairro">Bairro · Cidade</p>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script src="js/app.js"></script>
+  <script>
+    renderNavbar();
+
+    if (!Auth.requerAuth()) {}
+
+    
+    const selCat = document.getElementById('categoria');
+    CATEGORIAS.forEach(c => {
+      const opt = document.createElement('option');
+      opt.value = c.id;
+      opt.textContent = c.icon + ' ' + c.nome;
+      selCat.appendChild(opt);
+    });
+
+    
+    const params = new URLSearchParams(window.location.search);
+    const editId = params.get('edit');
+    if (editId) {
+      const p = ProdutosDB.buscarPorId(editId);
+      if (p) {
+        document.getElementById('pageTitle').textContent = 'Editar item';
+        document.getElementById('titulo').value = p.titulo;
+        document.getElementById('descricao').value = p.descricao || '';
+        document.getElementById('categoria').value = p.categoria;
+        document.getElementById('bairro').value = p.bairro;
+        document.getElementById('cidade').value = p.cidade;
+        const condInput = document.querySelector(`input[name=condicao][value="${p.condicao}"]`);
+        if (condInput) condInput.checked = true;
+        const intInput = document.querySelector(`input[name=intencao][value="${p.intencao}"]`);
+        if (intInput) intInput.checked = true;
+        atualizarPreview();
+      }
+    }
+
+    function simularUpload(idx) {
+      const slot = document.getElementById(`slot${idx}`);
+      const cat = document.getElementById('categoria').value;
+      const catObj = CATEGORIAS.find(c => c.id === cat);
+      const icon = catObj ? catObj.icon : `<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>`;
+      slot.innerHTML = `<span class='cat-svg-icon'>${icon}</span>`;
+      slot.classList.add('filled');
+      atualizarPreview();
+    }
+
+    function atualizarPreview() {
+      const titulo = document.getElementById('titulo').value || 'Título do item';
+      const cat = document.getElementById('categoria').value;
+      const catObj = CATEGORIAS.find(c => c.id === cat);
+      const bairro = document.getElementById('bairro')?.value || '';
+      const cidade = document.getElementById('cidade')?.value || '';
+      const intencao = document.querySelector('input[name=intencao]:checked')?.value || '';
+      const condicao = document.querySelector('input[name=condicao]:checked')?.value || '';
+
+      document.getElementById('previewTitle').textContent = titulo;
+      document.getElementById('previewImg').innerHTML = `<span class='cat-svg-icon'>${catObj ? catObj.icon : `<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>`}</span>`;
+      document.getElementById('previewBairro').textContent = [bairro, cidade].filter(Boolean).join(' · ') || 'Bairro · Cidade';
+
+      const chips = document.getElementById('previewChips');
+      chips.innerHTML = '';
+      if (catObj) chips.innerHTML += `<span class='chip chip-blue' style='display:inline-flex;align-items:center;gap:4px'>${catObj.icon}${catObj.nome.split(' ')[0]}</span>`;
+      if (intencao) {
+        const cls = intencao === 'Doar' ? 'chip-green' : 'chip-blue';
+        chips.innerHTML += `<span class="chip ${cls}">${intencao}</span>`;
+      }
+      if (condicao) chips.innerHTML += `<span class="chip">${condicao}</span>`;
+
+      document.getElementById('tituloCount').textContent = document.getElementById('titulo').value.length;
+    }
+
+    function contarDescricao() {
+      document.getElementById('descCount').textContent = document.getElementById('descricao').value.length;
+    }
+
+    function publicar() {
+      const titulo = document.getElementById('titulo').value.trim();
+      const categoria = document.getElementById('categoria').value;
+      const bairro = document.getElementById('bairro').value.trim();
+      const cidade = document.getElementById('cidade').value.trim();
+      const condicao = document.querySelector('input[name=condicao]:checked')?.value;
+      const intencao = document.querySelector('input[name=intencao]:checked')?.value;
+      const descricao = document.getElementById('descricao').value.trim();
+      const msg = document.getElementById('msgErro');
+
+      if (!titulo) { msg.textContent = 'O título é obrigatório.'; msg.style.display = 'block'; return; }
+      if (!categoria) { msg.textContent = 'Selecione uma categoria.'; msg.style.display = 'block'; return; }
+      if (!condicao) { msg.textContent = 'Selecione a condição do item.'; msg.style.display = 'block'; return; }
+      if (!intencao) { msg.textContent = 'Selecione a intenção (trocar ou doar).'; msg.style.display = 'block'; return; }
+      if (!bairro) { msg.textContent = 'Informe o bairro.'; msg.style.display = 'block'; return; }
+
+      msg.style.display = 'none';
+      const dados = { titulo, categoria, condicao, intencao, descricao, bairro, cidade, imagem: null };
+
+      if (editId) {
+        ProdutosDB.editar(editId, dados);
+        showToast('Item atualizado com sucesso!', 'success');
+      } else {
+        const novo = ProdutosDB.adicionar(dados);
+        showToast('Item publicado com sucesso!', 'success');
+      }
+
+      setTimeout(() => window.location.href = 'home.html', 1200);
+    }
+
+    // Listeners
+    document.getElementById('titulo').addEventListener('input', atualizarPreview);
+    document.getElementById('categoria').addEventListener('change', atualizarPreview);
+    document.getElementById('bairro')?.addEventListener('input', atualizarPreview);
+    document.querySelectorAll('input[name=intencao], input[name=condicao]').forEach(el => {
+      el.addEventListener('change', atualizarPreview);
+    });
+  </script>
+</body>
+</html>
