@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Trokaí – Detalhe do item</title>
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    .detail-layout {
+      display: grid;
+      grid-template-columns: 1fr 380px;
+      gap: 24px;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    @media (max-width: 900px) {
+      .detail-layout { grid-template-columns: 1fr; }
+    }
+
+    .img-gallery {
+      border-radius: var(--radius);
+      overflow: hidden;
+      background: var(--gray-100);
+      aspect-ratio: 4/3;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 6rem;
+      margin-bottom: 12px;
+    }
+
+    .img-thumbs {
+      display: flex;
+      gap: 8px;
+    }
+
+    .img-thumb {
+      width: 64px; height: 64px;
+      border-radius: 8px;
+      background: var(--gray-200);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      cursor: pointer;
+      border: 2px solid transparent;
+      transition: border-color 0.15s;
+    }
+
+    .img-thumb.active { border-color: var(--blue); }
+
+    .produto-titulo {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.6rem;
+      font-weight: 800;
+      color: var(--dark);
+      margin-bottom: 10px;
+      line-height: 1.2;
+    }
+
+    .produto-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+
+    .produto-descricao {
+      font-size: 0.95rem;
+      color: var(--gray-600);
+      line-height: 1.7;
+      margin-bottom: 20px;
+    }
+
+    .info-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .info-item {
+      background: var(--gray-50);
+      border-radius: var(--radius-sm);
+      padding: 12px 14px;
+    }
+
+    .info-item-label {
+      font-size: 0.75rem;
+      color: var(--gray-400);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 4px;
+    }
+
+    .info-item-value {
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: var(--dark);
+    }
+
+    .sidebar-card {
+      background: white;
+      border-radius: var(--radius);
+      padding: 20px;
+      box-shadow: var(--shadow-card);
+      margin-bottom: 16px;
+    }
+
+    .user-card {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 16px;
+    }
+
+    .user-info-name {
+      font-weight: 700;
+      font-size: 1rem;
+      color: var(--dark);
+    }
+
+    .user-info-sub {
+      font-size: 0.8rem;
+      color: var(--gray-400);
+      margin-top: 2px;
+    }
+
+    .user-stats {
+      display: flex;
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+
+    .user-stat {
+      text-align: center;
+    }
+
+    .user-stat-val {
+      font-size: 1.1rem;
+      font-weight: 800;
+      color: var(--dark);
+    }
+
+    .user-stat-label {
+      font-size: 0.72rem;
+      color: var(--gray-400);
+    }
+
+    .map-placeholder {
+      background: var(--gray-100);
+      border-radius: var(--radius-sm);
+      height: 140px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.875rem;
+      color: var(--gray-400);
+      gap: 8px;
+      margin-top: 16px;
+    }
+
+    .voltar-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--blue);
+      font-weight: 700;
+      font-size: 0.875rem;
+      margin-bottom: 20px;
+      padding: 8px 0;
+      cursor: pointer;
+    }
+
+    .section-sep {
+      border: none;
+      border-top: 1px solid var(--gray-200);
+      margin: 20px 0;
+    }
+
+    .similar-section { margin-top: 32px; }
+  </style>
+</head>
+<body>
+  <nav class="navbar" id="navbar"></nav>
+
+  <main class="main-content" style="max-width:1140px;margin:0 auto">
+    <div class="voltar-btn" onclick="history.back()">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5"/><path d="M12 5l-7 7 7 7"/></svg>
+      Voltar
+    </div>
+
+    <div class="detail-layout" id="detailLayout">
+      <div style="text-align:center;padding:60px;color:var(--gray-400)">Carregando...</div>
+    </div>
+  </main>
+
+  <div class="modal-overlay" id="modalTroca" style="display:none" onclick="fecharModal(event)">
+    <div class="modal">
+      <div class="modal-header">
+        <span class="modal-title">Propor troca</span>
+        <button class="modal-close" onclick="document.getElementById('modalTroca').style.display='none'"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+      </div>
+      <p style="font-size:0.875rem;color:var(--gray-600);margin-bottom:16px">O que você quer oferecer em troca?</p>
+      <div class="form-group">
+        <label class="form-label">Descreva o que você tem para oferecer</label>
+        <textarea class="form-control" id="msgTroca" rows="3" placeholder="Ex: Tenho um livro de Python, seminovo. Topo trocar!"></textarea>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Categoria do seu item</label>
+        <select class="form-control" id="catTroca">
+          <option value="">Selecione...</option>
+          ${CATEGORIAS ? '' : ''}
+        </select>
+      </div>
+      <button class="btn btn-primary btn-full" onclick="enviarProposta()">Enviar proposta</button>
+    </div>
+  </div>
+
+  <script src="js/app.js"></script>
+  <script>
+    renderNavbar();
+
+
+    const selCat = document.getElementById('catTroca');
+    CATEGORIAS.forEach(c => {
+      const opt = document.createElement('option');
+      opt.value = c.id;
+      opt.textContent = c.icon + ' ' + c.nome;
+      selCat.appendChild(opt);
+    });
+
+    const params = new URLSearchParams(window.location.search);
+    const id = params.get('id');
+    const produto = id ? ProdutosDB.buscarPorId(id) : null;
+
+    if (!produto) {
+      document.getElementById('detailLayout').innerHTML = `
+        <div class="empty-state" style="grid-column:1/-1">
+          <h3>Item não encontrado</h3>
+          <p>Este item pode ter sido removido.</p>
+          <button class="btn btn-primary btn-sm" onclick="window.location.href='home.html'">Ver todos os itens</button>
+        </div>`;
+    } else {
+      document.title = `Trokaí – ${produto.titulo}`;
+      const catObj = CATEGORIAS.find(c => c.id === produto.categoria);
+      const intencaoClass = produto.intencao === 'Doar' ? 'badge-doacao' : 'badge-troca';
+
+      document.getElementById('detailLayout').innerHTML = `
+        <!-- Coluna esquerda -->
+        <div>
+          <div class="img-gallery"><span class='cat-svg-icon large'>${catObj ? catObj.icon : `<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>`}</span></div>
+          <div class="img-thumbs">
+            ${[1,2,3].map((i, idx) => `
+              <div class="img-thumb ${idx === 0 ? 'active' : ''}"><span class='cat-svg-icon'>${catObj ? catObj.icon : `<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>`}</span></div>
+            `).join('')}
+          </div>
+
+          <hr class="section-sep" style="margin-top:20px">
+
+          <h1 class="produto-titulo">${produto.titulo}</h1>
+
+          <div class="produto-chips">
+            <span class="chip chip-blue">
+              <span style='display:inline-flex;align-items:center;gap:6px'>${catObj ? catObj.icon : `<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>`}${catObj ? catObj.nome : produto.categoria}</span>
+            </span>
+            <span class="product-badge ${intencaoClass}" style="position:static;font-size:0.8rem;padding:5px 12px;border-radius:50px">
+              ${produto.intencao}
+            </span>
+            <span class="chip">${produto.condicao}</span>
+          </div>
+
+          <p class="produto-descricao">${produto.descricao || 'Sem descrição disponível.'}</p>
+
+          <div class="info-grid">
+            <div class="info-item">
+              <div class="info-item-label">Localização</div>
+              <div class="info-item-value">${produto.bairro}</div>
+            </div>
+            <div class="info-item">
+              <div class="info-item-label">Cidade</div>
+              <div class="info-item-value">${produto.cidade}</div>
+            </div>
+            <div class="info-item">
+              <div class="info-item-label">Condição</div>
+              <div class="info-item-value">${produto.condicao}</div>
+            </div>
+            <div class="info-item">
+              <div class="info-item-label">Intenção</div>
+              <div class="info-item-value">${produto.intencao}</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Coluna direita -->
+        <div>
+          <div class="sidebar-card">
+            <div class="user-card">
+              <div class="avatar avatar-lg">${produto.usuario.avatar}</div>
+              <div>
+                <div class="user-info-name">${produto.usuario.nome}</div>
+                <div class="stars" style="margin-top:4px">
+                  ${[1,2,3,4,5].map(n => `
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="${n <= Math.round(produto.usuario.nota) ? '#FFC107' : '#e0e0e0'}"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                  `).join('')}
+                  <span class="stars-text">${produto.usuario.nota} / 5.0</span>
+                </div>
+                <div class="user-info-sub">Membro desde 2024</div>
+              </div>
+            </div>
+
+            <div class="user-stats">
+              <div class="user-stat">
+                <div class="user-stat-val">12</div>
+                <div class="user-stat-label">Trocas</div>
+              </div>
+              <div class="user-stat">
+                <div class="user-stat-val">5</div>
+                <div class="user-stat-label">Doações</div>
+              </div>
+              <div class="user-stat">
+                <div class="user-stat-val">100%</div>
+                <div class="user-stat-label">Confiável</div>
+              </div>
+            </div>
+
+            <button class="btn btn-primary btn-full" onclick="abrirModalTroca()" style="margin-bottom:10px">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 16V4m0 0L3 8m4-4l4 4"/><path d="M17 8v12m0 0l4-4m-4 4l-4-4"/></svg>
+              Propor troca
+            </button>
+            <button class="btn btn-outline btn-full" onclick="abrirChat()">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+              Enviar mensagem
+            </button>
+
+            <div class="map-placeholder">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+              ${produto.bairro}, ${produto.cidade}
+            </div>
+          </div>
+
+          <div class="sidebar-card">
+            <div style="font-weight:700;margin-bottom:10px;font-size:0.9rem;display:flex;align-items:center;gap:6px"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg> Dicas de segurança</div>
+            <ul style="font-size:0.8rem;color:var(--gray-600);line-height:1.8;padding-left:16px">
+              <li>Combine a troca em local público</li>
+              <li>Verifique o item antes de finalizar</li>
+              <li>Avalie o usuário após a troca</li>
+              <li>Não envie dinheiro antecipado</li>
+            </ul>
+          </div>
+        </div>
+      `;
+    }
+
+    function abrirModalTroca() {
+      if (!Auth.user) { window.location.href = 'index.html'; return; }
+      document.getElementById('modalTroca').style.display = 'flex';
+    }
+
+    function fecharModal(e) {
+      if (e.target === document.getElementById('modalTroca')) {
+        document.getElementById('modalTroca').style.display = 'none';
+      }
+    }
+
+    function enviarProposta() {
+      const msg = document.getElementById('msgTroca').value.trim();
+      if (!msg) { showToast('Descreva o que você tem para oferecer', 'error'); return; }
+      document.getElementById('modalTroca').style.display = 'none';
+      showToast('Proposta enviada! Aguarde a resposta do usuário.', 'success');
+    }
+
+    function abrirChat() {
+      if (!Auth.user) { window.location.href = 'index.html'; return; }
+      showToast('Chat: funcionalidade em desenvolvimento.', 'info');
+    }
+  </script>
+</body>
+</html>
