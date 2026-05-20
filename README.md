@@ -1,10 +1,10 @@
-# 🔄 Trokaí — Plataforma de Trocas e Doações
+#  Trokaí — Plataforma de Trocas e Doações
 
 > Plataforma web voltada para a **economia circular**, conectando vizinhos e pessoas da mesma região para trocar ou doar itens (roupas, livros, eletrônicos) **sem transações financeiras**.
 
 ---
 
-## 📖 Descrição do Projeto
+##  Descrição do Projeto
 
 O **Trokaí** preenche a lacuna deixada por grandes marketplaces (que focam em vendas) ao priorizar a **proximidade geográfica** e a **confiança entre usuários**. A plataforma evita o desperdício e o descarte incorreto de objetos em bom estado, promovendo a sustentabilidade.
 
@@ -12,7 +12,7 @@ O **Trokaí** preenche a lacuna deixada por grandes marketplaces (que focam em v
 
 ---
 
-## 👥 Integrantes do Grupo
+##  Integrantes do Grupo
 
 | Nome | Responsabilidade |
 |------|-----------------|
@@ -22,7 +22,7 @@ O **Trokaí** preenche a lacuna deixada por grandes marketplaces (que focam em v
 
 ---
 
-## 🛠️ Tecnologias Utilizadas
+##  Tecnologias Utilizadas
 
 - **HTML5** — Estrutura semântica das páginas
 - **CSS3** — Estilização com variáveis CSS, Flexbox e Grid Layout
@@ -34,7 +34,7 @@ O **Trokaí** preenche a lacuna deixada por grandes marketplaces (que focam em v
 
 ---
 
-## 🚀 Como Executar o Projeto Localmente
+##  Como Executar o Projeto Localmente
 
 ### Pré-requisitos
 - Navegador moderno (Chrome, Firefox, Edge, Safari)
@@ -44,7 +44,7 @@ O **Trokaí** preenche a lacuna deixada por grandes marketplaces (que focam em v
 
 ```bash
 # Clone o repositório
-git clone https://github.com/SEU_USUARIO/trokai.git
+git clone https://github.com/marcosffcode/trokai.git
 
 # Entre na pasta do projeto
 cd trokai
@@ -66,11 +66,11 @@ novo-produto.html → Publicar / editar item
 perfil.html      → Perfil do usuário
 ```
 
-> ⚠️ O projeto usa `sessionStorage` para simular autenticação. Os dados são reiniciados ao fechar o navegador (comportamento intencional para demonstração).
+>  O projeto usa `sessionStorage` para simular autenticação. Os dados são reiniciados ao fechar o navegador (comportamento intencional para demonstração).
 
 ---
 
-## ✅ Funcionalidades Implementadas
+##  Funcionalidades Implementadas
 
 ### Autenticação
 - [x] Tela de Login com validação de email e senha
@@ -110,7 +110,7 @@ perfil.html      → Perfil do usuário
 
 ---
 
-## 📁 Estrutura de Pastas
+##  Estrutura de Pastas
 
 ```
 trokai/
@@ -132,7 +132,7 @@ trokai/
 
 ---
 
-## 🎨 Identidade Visual
+##  Identidade Visual
 
 | Elemento | Valor |
 |---------|-------|
@@ -144,7 +144,7 @@ trokai/
 
 ---
 
-## 📱 Responsividade
+##  Responsividade
 
 O projeto adota a abordagem **Mobile-First**:
 - Em telas menores que 768px, a sidebar se oculta
@@ -153,7 +153,7 @@ O projeto adota a abordagem **Mobile-First**:
 
 ---
 
-## 📋 Observações
+##  Observações
 
 - Os dados são **mockados em JavaScript** (`js/app.js`) para simular um banco de dados
 - A autenticação usa `sessionStorage` (simulada, sem back-end real)
